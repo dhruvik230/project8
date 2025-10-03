@@ -1,0 +1,222 @@
+import numpy as np
+
+class NumpyAnalyzer:
+
+    def create_array(self):
+        print("\nArray Creation : ")
+        print("1. 1D Array")
+        print("2. 2D Array")
+        print("3. 3D Array")
+
+        try:
+            choice = int(input("Enter your choice : "))
+            if choice == 1:
+                data = list(map(int, input("Enter elements separated by space : ").split()))
+                arr = np.array(data)
+                print("Array created successfully:", arr)
+
+            elif choice == 2:
+                rows = int(input("Enter number of rows : "))
+                cols = int(input("Enter number of columns : "))
+                arr = self.get_array(rows, cols)
+                print("Array created successfully:\n", arr)
+
+            elif choice == 3:
+                x = int(input("Enter dimension x : "))
+                y = int(input("Enter dimension y : "))
+                z = int(input("Enter dimension z : "))
+                expected = x * y * z
+                data = list(map(int, input(f"Enter {expected} elements separated by space : ").split()))
+                if len(data) != expected:
+                    print("Incorrect number of elements.")
+                    return
+                arr = np.array(data).reshape(x, y, z)
+                print("Array created successfully:\n", arr)
+
+            else:
+                print("Invalid choice")
+        except ValueError:
+            print("Invalid input!")
+
+    def math_operations(self):
+        print("\nMathematical Operations :")
+        print("1. Addition")
+        print("2. Subtraction")
+        print("3. Multiplication")
+        print("4. Division")
+
+        try:
+            choice = int(input("Enter your choice : "))
+            rows = int(input("Enter number of rows : "))
+            cols = int(input("Enter number of columns : "))
+            arr1 = self.get_array(rows, cols, "Enter elements for first array")
+            arr2 = self.get_array(rows, cols, "Enter elements for second array")
+
+            print("First Array:\n", arr1)
+            print("Second Array:\n", arr2)
+
+            if choice == 1:
+                print("Result of Addition:\n", arr1 + arr2)
+            elif choice == 2:
+                print("Result of Subtraction:\n", arr1 - arr2)
+            elif choice == 3:
+                print("Result of Multiplication:\n", arr1 * arr2)
+            elif choice == 4:
+                with np.errstate(divide='ignore', invalid='ignore'):
+                    result = np.true_divide(arr1, arr2)
+                    result[arr2 == 0] = np.nan
+                    print("Result of Division:\n", result)
+            else:
+                print("Invalid operation choice")
+        except ValueError:
+            print("Invalid input!")
+
+    def combine_or_split(self):
+        print("\n1. Combine Arrays")
+        print("2. Split Array")
+
+        try:
+            choice = int(input("Enter your choice : "))
+
+            if choice == 1:
+                print("Choose method to combine:")
+                print("1. Vertical Stack (vstack)")
+                print("2. Horizontal Stack (hstack)")
+                stack_choice = int(input("Enter your choice: "))
+
+                rows = int(input("Enter rows : "))
+                cols = int(input("Enter cols : "))
+                arr1 = self.get_array(rows, cols, "Enter elements for first array")
+                arr2 = self.get_array(rows, cols, "Enter elements for second array")
+
+                if stack_choice == 1:
+                    combined = np.vstack((arr1, arr2))
+                elif stack_choice == 2:
+                    combined = np.hstack((arr1, arr2))
+                else:
+                    print("Invalid stacking choice.")
+                    return
+                print("Combined Array:\n", combined)
+
+            elif choice == 2:
+                rows = int(input("Enter rows : "))
+                cols = int(input("Enter columns : "))
+                arr = self.get_array(rows, cols)
+
+                print("Original Array:\n", arr)
+                print("Splitting methods:")
+                print("1. Horizontal Split")
+                print("2. Vertical Split")
+                split_choice = int(input("Choose split method: "))
+
+                if split_choice == 1 and cols > 1:
+                    result = np.hsplit(arr, cols)
+                elif split_choice == 2 and rows > 1:
+                    result = np.vsplit(arr, rows)
+                else:
+                    print("Cannot split further. Need at least 2 rows or columns.")
+                    return
+
+                print("Splitted Arrays:")
+                for part in result:
+                    print(part)
+
+            else:
+                print("Invalid choice.")
+        except ValueError:
+            print("Invalid input!")
+
+    def filter_array(self):
+        print("\n1. Search a value")
+        print("2. Sort the array")
+        print("3. Filter values by threshold")
+
+        try:
+            choice = int(input("Enter your choice: "))
+            rows = int(input("Enter rows : "))
+            cols = int(input("Enter cols : "))
+            arr = self.get_array(rows, cols)
+
+            print("Original Array:\n", arr)
+
+            if choice == 1:
+                val = int(input("Enter value to search : "))
+                result = np.where(arr == val)
+                if result[0].size > 0:
+                    print(f"Value {val} found at indices:", result)
+                else:
+                    print(f"Value {val} not found in array.")
+            elif choice == 2:
+                print("Sorted Array (row-wise):\n", np.sort(arr, axis=1))
+            elif choice == 3:
+                threshold = int(input("Enter threshold value : "))
+                print(f"Values greater than {threshold}:\n", arr[arr > threshold])
+            else:
+                print("Invalid choice.")
+        except ValueError:
+            print("Invalid input!")
+
+    def aggregate_functions(self):
+        print("\n1. Sum")
+        print("2. Mean")
+        print("3. Median")
+        print("4. Standard Deviation")
+        print("5. Variance")
+
+        try:
+            choice = int(input("Enter your choice: "))
+            rows = int(input("Enter rows : "))
+            cols = int(input("Enter cols : "))
+            arr = self.get_array(rows, cols)
+
+            print("Original Array:\n", arr)
+
+            if choice == 1:
+                print("Sum of Array:", np.sum(arr))
+            elif choice == 2:
+                print("Mean of Array:", np.mean(arr))
+            elif choice == 3:
+                print("Median of Array:", np.median(arr))
+            elif choice == 4:
+                print("Standard Deviation of Array:", np.std(arr))
+            elif choice == 5:
+                print("Variance of Array:", np.var(arr))
+            else:
+                print("Invalid choice.")
+        except ValueError:
+            print("Invalid input!")
+
+def main():
+    obj = NumpyAnalyzer()
+
+    while True:
+        print("\n===== NumPy Analyzer =====")
+        print("1. Create a NumPy Array")
+        print("2. Perform Mathematical Operations")
+        print("3. Combine or Split Arrays")
+        print("4. Search, Sort, or Filter Arrays")
+        print("5. Compute Aggregates and Statistics")
+        print("6. Exit")
+
+        try:
+            option = int(input("Enter your choice: "))
+            if option == 1:
+                obj.create_array()
+            elif option == 2:
+                obj.math_operations()
+            elif option == 3:
+                obj.combine_or_split()
+            elif option == 4:
+                obj.filter_array()
+            elif option == 5:
+                obj.aggregate_functions()
+            elif option == 6:
+                print("Thank you for using NumPy Analyzer! Goodbye!")
+                break
+            else:
+                print("Invalid choice! Try again.")
+        except ValueError:
+            print("Invalid input! Please enter a number.")
+
+if __name__ == "__main__":
+    main()
